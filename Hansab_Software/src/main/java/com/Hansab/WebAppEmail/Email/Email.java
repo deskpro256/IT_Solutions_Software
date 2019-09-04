@@ -80,7 +80,7 @@ public class Email {
 			    	time = messages[i].getSentDate().toString();
 			    	from = messages[i].getFrom()[0].toString();
 			    	subject = messages[i].getSubject();
-			    	//content = messages[i].getContent().toString();
+			    	//content = messages[i].getContent().toString(); //returns some MimeMultipart
 			    	content = getEmailBody(messages[i]);
 			    	//looks for status code 1001 and makes the row green
 			    	if(content.contains("1001")) {
@@ -140,6 +140,7 @@ public class Email {
     	   if (contentType.contains("multipart")) {
     	        Multipart multiPart = (Multipart) gotMessage.getContent();
     	        int numberOfParts = multiPart.getCount();
+    	        System.out.println(numberOfParts);
     	        for (int partCount = 0; partCount < numberOfParts; partCount++) {
     	            MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
     	            body = part.getContent().toString();

@@ -1,0 +1,7 @@
+* GMAIL html email data is garbage, need only text;
+* build a working .jar;
+* .js linked script not working in localhost page, but when opened separately works;
+* .js file inside <script>code here</script> works w/o problems, just looks nasty in IDE;
+* DELETE emails from server after downloading(partially done if enable setting in gmails pop3 that deletes emails when they are downloaded from the server);
+* why dont emails download after they have been downloaded once already, but not deleted(DEL setting off, they are still in the inbox);
+* 
