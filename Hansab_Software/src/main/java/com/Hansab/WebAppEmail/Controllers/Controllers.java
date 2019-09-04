@@ -16,12 +16,13 @@ public class Controllers {
 	@RequestMapping("/allEmails.html")
 	public String MailList() {
 		//downloads emails, creates csv & html files
-		Email.Email();
-		//opens the newly created html file
-		return "allEmails.html";
-	}
-	@RequestMapping("/noEmail.html")
-	public static String noEmail() {
-		return "noEmail.html";
+		
+		if(Email.Email() > 0) {
+			//opens the newly created html file
+			return "allEmails.html";
+		}
+		else {
+			return "noEmail.html";
+		}
 	}
 }

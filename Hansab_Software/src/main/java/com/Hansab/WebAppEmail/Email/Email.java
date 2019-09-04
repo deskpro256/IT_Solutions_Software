@@ -5,20 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 import javax.mail.*;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
 import com.Hansab.WebAppEmail.Controllers.*;
 
 public class Email {
 	
-    public static void Email(){
+    public static int Email(){
 
-        int port = 995;
+        int port = 995;									 //<< POP3 protocol port
+        int count = 0;
     	//my test email is internetsvajag123@gmail.com
-    	String username = "internetsvajag123@gmail.com";
-    	String password = "Hansab123";
-        String protocol = "pop3s";//gmail uses pop3s as the protocol name. If not working using other host, probably change it to pop3
-        String host = "pop.gmail.com";
+    	String username = "internetsvajag123@gmail.com"; //<< replace with email address
+    	String password = "Hansab123"; 					 //<< replace with emails password
+        String protocol = "pop3s";						 //<< gmail uses pop3s as the protocol name. If not working using other host, probably change it to pop3
+        String host = "pop.gmail.com";					 //<< replace with hosts server address
         String toFiletxt = "";
         String time;
         String from;
@@ -67,28 +69,29 @@ public class Email {
 			Message[] messages = inbox.getMessages();
 			
 			fullHTML = htmlStart;
-			
+			count = messages.length;
 			if(messages.length == 0) {
 				//No messages found!
-				Controllers.noEmail();
 				System.out.println("No messages found.");
 			}
 			else{
-			    for(int i = 0; i < messages.length; i++) {	
+			    for(int i = 0; i < messages.length; i++) {
+			    	
 			    	time = messages[i].getSentDate().toString();
 			    	from = messages[i].getFrom()[0].toString();
 			    	subject = messages[i].getSubject();
-			    	content = messages[i].getContent().toString();
+			    	//content = messages[i].getContent().toString();
+			    	content = getEmailBody(messages[i]);
 			    	//looks for status code 1001 and makes the row green
-			    	if(subject.contains("INFO")) {
+			    	if(content.contains("1001")) {
 			    		color = colorSet1;
 			    	}
 			    	//looks for status code 2001 and makes the row yellow
-			    	else if(subject.contains("WARNING")) {
+			    	else if(content.contains("2001")) {
 			    		color = colorSet2;
 			    	}
 			    	//looks for status code 3001 and makes the row red
-			    	else if(subject.contains("ERROR")) {
+			    	else if(content.contains("3001")) {
 			    		color = colorSet3;
 			    	}
 			    	//creates the table row and adds to the HTML
@@ -113,9 +116,10 @@ public class Email {
 			htmlWriter.close();			
 			//saves the csv file
 			FileWriter fileWriter = new FileWriter("src/main/resources/templates/allEmails.csv");
+			//fileWriter.append(toFiletxt);
 		    fileWriter.write(toFiletxt);
 		    fileWriter.close();
-		    			
+		    
 		} catch (NoSuchProviderException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,5 +130,28 @@ public class Email {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return count;
     }
+    
+    public static String getEmailBody(Message gotMessage) throws MessagingException, IOException {
+    	String body = "";
+    	String contentType = gotMessage.getContentType();
+    	
+    	   if (contentType.contains("multipart")) {
+    	        Multipart multiPart = (Multipart) gotMessage.getContent();
+    	        int numberOfParts = multiPart.getCount();
+    	        for (int partCount = 0; partCount < numberOfParts; partCount++) {
+    	            MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
+    	            body = part.getContent().toString();
+    	        }
+    	    }
+    	    else if (contentType.contains("text/plain") || contentType.contains("text/html")) {
+    	        Object content = gotMessage.getContent();
+    	        if (content != null) {
+    	        	body = content.toString();
+    	        }
+    	    }    	
+    	return body;
+    }
+    
 }
