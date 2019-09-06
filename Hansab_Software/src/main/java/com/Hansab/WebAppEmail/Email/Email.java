@@ -104,6 +104,7 @@ public class Email {
 			    	//adds the email data for a csv file to a string
 			    	toFiletxt += time + "," + from + "," + subject + "," + content + "\r\n";
 			    	//TODO somehow delete the message. Send a DEL request.
+			    	//Or enable deleting email from the server after it is downloaded
 			    }
 			}			
 			inbox.close(true);
@@ -148,6 +149,7 @@ public class Email {
     	    }
     	    else if (contentType.contains("text/plain") || contentType.contains("text/html")) {
     	        Object content = gotMessage.getContent();
+    	        System.out.println(content);
     	        if (content != null) {
     	        	body = content.toString();
     	        }
