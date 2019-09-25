@@ -141,7 +141,7 @@ public class Email {
     	   if (contentType.contains("multipart")) {
     	        Multipart multiPart = (Multipart) gotMessage.getContent();
     	        int numberOfParts = multiPart.getCount();
-    	        System.out.println(numberOfParts);
+    	        //System.out.println(numberOfParts);
     	        for (int partCount = 0; partCount < numberOfParts; partCount++) {
     	            MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(partCount);
     	            body = part.getContent().toString();
@@ -149,7 +149,7 @@ public class Email {
     	    }
     	    else if (contentType.contains("text/plain") || contentType.contains("text/html")) {
     	        Object content = gotMessage.getContent();
-    	        System.out.println(content);
+    	        //System.out.println(content);
     	        if (content != null) {
     	        	body = content.toString();
     	        }
